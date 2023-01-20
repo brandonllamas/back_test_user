@@ -1,7 +1,7 @@
 //#region Imports
 const { Router } = require('express');
 const { login } = require('../app/controllers/auth');
-const { getUser, getAllUsers, createUser, updateUser } = require('../app/controllers/UsersController');
+const { getUser, getAllUsers, createUser, updateUser, deleteUser } = require('../app/controllers/UsersController');
 
 const router  = Router()
 //#endregion
@@ -31,6 +31,7 @@ router.get('', getAllUsers );
 router.get('/:id',authValid, getUser );
 router.post('',authValid, createUser );
 router.put('/:id',authValid, updateUser );
+router.delete('/:id',authValid, deleteUser );
 //#endregion
 
 

@@ -178,7 +178,34 @@ const updateUser = async (req = request, res = response) => {
 
 }
 
+const deleteUser = async (req = request, res = response) => {
+    const id = req.params.id;
 
+    const users = await UserModel.findOne({ where: { id } });
+    if (users == null) {
+        return res.json({
+            code: 500,
+            user: null,
+            msg: "User not found",
+        });
+    }
+
+    try {
+      await users.destroy();
+        return res.json({
+            code: 200,
+            user: users,
+            msg: "removed",
+        });
+    } catch (error) {
+        return res.json({
+            code: 400,
+            user: null,
+            msg: error,
+        });
+    }
+
+}
 
 
 
@@ -186,5 +213,6 @@ module.exports = {
     getUser,
     getAllUsers,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 }
