@@ -17,7 +17,18 @@ const encriptPass = async (myPlaintextPassword) => {
   return hashedPassword
 
 }
-
+const compareHash = async (myPlaintextPassword,hash) => {
+    
+    const hashedPassword = await new Promise((resolve, reject) => {
+      bcrypt.compare(myPlaintextPassword, hash, function(err, result) {
+        // result == true
+             resolve(result)
+        });
+    })
+  
+    return hashedPassword
+  
+  }
 
 const validReqVar = (text)=>{
     if (text == "") {
@@ -38,6 +49,7 @@ const validReqVar = (text)=>{
 //#region expors
 module.exports = {
     encriptPass,
-    validReqVar
+    validReqVar,
+    compareHash
 }
 //#endregion

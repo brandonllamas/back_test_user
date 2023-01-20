@@ -17,7 +17,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('users', [{
       first_name: 'Brandon',
-      first_name: 'Llamas Larios',
+      last_name: 'Llamas Larios',
       date_birth: new Date(),
       address: '222',
       password: await encriptPass("prueba132"),

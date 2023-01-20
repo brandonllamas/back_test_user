@@ -2,9 +2,6 @@
 const express = require('express')
 const cors = require('cors');
 const { Cookie } = require('express-session');
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
-const passport = require('passport')
 //#endregion
 
 //#region Server
@@ -17,26 +14,13 @@ class Server {
         //puerto tomado del .env
         this.port = process.env.PORT_SERVER;
         //path de las rutas
-        this.pathRoutes = "/api/v1"
+        this.pathRoutes = "/api/v1/users"
         //rutas
         this.middlewares()
         this.routes();
     }
 
     middlewares(){
-
-        //cookie parser
-        this.app.use(cookieParser(this.secret_cookie))
-
-        //session
-        this.app.use(session({
-            secret:this.secret_cookie,
-            resave:true,
-            saveUninitialized:true
-        }))
-
-        this.app.use(passport.initialize());
-        this.app.use(passport.session())
 
         //CORS
         this.app.use(cors());
@@ -49,7 +33,27 @@ class Server {
     }
 
     routes(){
-        this.app.use(this.pathRoutes+"/users",require('../routes/users'))
+        this.app.use(this.pathRoutes,require('../routes/AuthRoute'))
+        this.app.use(this.authValid)
+        this.app.use(this.pathRoutes,require('../routes/UserRoute'))
+
+        //ruta middleware auth
+    }
+
+    authValid(req, res, next){
+        const bearerHeader = req.headers['authorization'];
+
+        if (typeof bearerHeader !== 'undefined') {
+                const bearerToken = bearerHeader.split(" ")[1];
+                req.token = bearerToken;
+                next();
+        }else{
+            res.json({
+                code:403,
+                msg:"Access denied"
+            })
+        }
+        
     }
 
     listen(){
